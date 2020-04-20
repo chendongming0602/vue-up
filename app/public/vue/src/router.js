@@ -31,6 +31,13 @@ const router=new Router({
               is:false
             }
           },
+          {
+            path:'/look',
+            component:() => import('@/pages/look.vue'),
+            meta:{
+              is:false
+            }
+          },
       ]
 })
 // 1、to:即将要进入的目标路由对象；

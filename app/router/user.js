@@ -1,11 +1,53 @@
  const express=require("express");
 var router=express.Router();
 const pool=require("../pool.js");
-
-console.log(__dirname);
-router.post('/avatar',(req,res)=>{
-	res.send({code:1,message:"成功",data:[]})
+let fs = require('fs');
+const multer = require('multer');
+// console.log(__dirname);
+// console.log(Date.now());
+//上传的文件保存在 upload
+const storage = multer.diskStorage({
+    //存储的位置
+    destination(req, file, cb){
+        cb(null, "public/vue/public/img")
+    },
+    //文件名字的确定 multer默认帮我们取一个没有扩展名的文件名，因此需要我们自己定义
+    filename(req, file, cb){
+        cb(null, Date.now() +"-"+ file.originalname)
+    }
 });
+const storage2 = multer.diskStorage({
+    //存储的位置
+    destination(req, file, cb){
+        cb(null, "public/vue/public/text")
+    },
+    //文件名字的确定 multer默认帮我们取一个没有扩展名的文件名，因此需要我们自己定义
+    filename(req, file, cb){
+        cb(null, Date.now() +"-"+ file.originalname)
+    }
+});
+ //传入storage 除了这个参数我们还可以传入dest等参数
+ const upload = multer({storage});//图片
+ const upload2 = multer({storage:storage2});//文件
+router.post('/img',upload.single('file'),(req,res,next)=>{
+    let url=req.file.filename;
+	console.log(url)  
+	res.send({code:1,message:"上传图片成功",data:[]})
+});
+router.post('/text',upload2.single('text'),(req,res,next)=>{
+    let url=req.file.originalname;
+	console.log(url)  
+	res.send({code:1,message:"上传文件成功",data:[]})
+});
+// let uploadEvent=(req,folder)=>{//上传的总函数
+// 	return new Promise((reslove,rejact)=>{
+// 	   const url = `public\/${req.file.filename}`;
+// 	   let name = /\.[^\.]+$/.exec(url);//后缀
+// 	   let math=Math.random();
+// 	   math=math.toString().replace(".","");//随机字符串
+	   
+// 	});
+// }
 // router.post("/reg",(req,res)=>{
 // 	var id="";
 // 	var uname=req.body.uname;
